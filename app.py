@@ -1,11 +1,14 @@
 
 import streamlit as st
 from skimage import io
+from skimage.transform import rescale, resize, downscale_local_mean
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 import face_recognition
 import os
-import cv2
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
 import random
 
 if 'a' not in st.session_state:
@@ -57,9 +60,14 @@ def process_an_image(img):
     faces_feature_vector = face_recognition.face_encodings(img,known_face_locations=face_locations)
     faces_feature_vector=np.array(faces_feature_vector)
     tags_preidcted=tags_X_recognizer[2].predict(faces_feature_vector)
+
+    img_pil=Image.fromarray(img)
+    draw = ImageDraw.Draw(img_pil)
     for i,face in enumerate(face_locations):
-        cv2.rectangle(img, (face[3], face[2]), (face[1],face[0]), (255, 255, 255), 5)
-        cv2.putText(img, tags_X_recognizer[0][tags_preidcted[i]], (face[3], face[0]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255),3)
+        draw.rectangle(((face[3], face[2]), (face[1],face[0])), outline="white", width=10)
+        draw.text((face[3]+10, face[0]+10), tags_X_recognizer[0][tags_preidcted[i]], font=ImageFont.truetype("arial",50))
+
+    img=np.array(img_pil)
     return img
 
 
@@ -71,6 +79,7 @@ if navigation=='Home':
     st.write(str(tags_X_recognizer[0]))
     if uploaded_file is not None:
         img=io.imread(uploaded_file)
+        img = (resize(img, (1000, (img.shape[1]*1000) // img.shape[0]))*255).astype('uint8')
         col_one, col_two = st.columns(2)
         col_one.header("Input")
         col_one.image(img)
@@ -78,7 +87,7 @@ if navigation=='Home':
         col_two.header("Output")
         #dosth
         img_out=process_an_image(img)
-        col_two.image(img)
+        col_two.image(img_out)
 elif navigation=='Add more faces':
     st.title('Face Recognition Application')
     name=st.text_input(label="Name")

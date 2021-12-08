@@ -4,4 +4,4 @@ numpy
 scikit_image
 scikit_learn
 streamlit
-opencv_python==4.5.1.48
+pillow
