@@ -3,6 +3,5 @@ matplotlib
 numpy
 scikit_image
 scikit_learn
-skimage
 streamlit
 opencv_python
