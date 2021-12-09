@@ -65,7 +65,7 @@ def process_an_image(img):
     draw = ImageDraw.Draw(img_pil)
     for i,face in enumerate(face_locations):
         draw.rectangle(((face[3], face[2]), (face[1],face[0])), outline="white", width=10)
-        draw.text((face[3]+10, face[0]+10), tags_X_recognizer[0][tags_preidcted[i]], font=ImageFont.truetype("arial",50))
+        draw.text((face[3]+10, face[0]+10), tags_X_recognizer[0][tags_preidcted[i]], font=ImageFont.truetype("KGBlankSpaceSolid.ttf",50))
 
     img=np.array(img_pil)
     return img
